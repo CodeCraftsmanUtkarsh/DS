@@ -1,47 +1,26 @@
 class Solution {
 public:
     int largestRectangleArea(vector<int>& heights) {
-        int n = heights.size();
-        stack<int> st;
-        vector<int> nse(n, -1);
-        vector<int> pse(n, -1);
-
-        // NSE
-        for(int i = n - 1; i >= 0; i--){
-            while(!st.empty() && heights[st.top()] >= heights[i]){
+        stack<int>st;
+        int n=heights.size();
+        int maxArea=0;
+        for(int i=0;i<n;i++){
+            while(!st.empty() && heights[st.top()]>=heights[i]){
+                int element = st.top();
                 st.pop();
-            }
-            if(!st.empty()){
-                nse[i] = st.top();
-            } else {
-                nse[i] = n;
+                int nse=i;
+                int pse=(st.empty())?-1:st.top();
+                maxArea=max(maxArea,(nse-pse-1)*heights[element]);
             }
             st.push(i);
         }
-
-        // clear stack
-        while(!st.empty()) st.pop();
-
-        // PSE
-        for(int i = 0; i < n; i++){
-            while(!st.empty() && heights[st.top()] >= heights[i]){
-                st.pop();
-            }
-            if(!st.empty()){
-                pse[i] = st.top();
-            } else {
-                pse[i] = -1;
-            }
-            st.push(i);
+        while(!st.empty()){
+            int nse=n;
+            int element=st.top();
+            st.pop();
+            int pse=(st.empty())?-1:st.top();
+            maxArea=max(maxArea,(nse-pse-1)*heights[element]);
         }
-
-        int ans = 0;
-
-        for(int i = 0; i < n; i++){
-            int width = nse[i] - pse[i] - 1;
-            ans = max(ans, width * heights[i]);
-        }
-
-        return ans;
+        return maxArea;
     }
 };
