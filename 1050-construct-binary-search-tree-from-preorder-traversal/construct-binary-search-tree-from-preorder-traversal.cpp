@@ -11,32 +11,14 @@
  */
 class Solution {
 public:
-    TreeNode* bstFromPreorder(vector<int>& preorder) {
-        TreeNode* root = new TreeNode(preorder[0]);
-        int n=preorder.size();
-        for(int i=1;i<n;i++){
-            insert(root, preorder[i]);
+    int i=0;
+    TreeNode* bstFromPreorder(vector<int>& preorder,int bound=INT_MAX) {
+        if(i==preorder.size() || preorder[i]>bound){
+            return nullptr;
         }
-        return root;
-    }
-    void insert(TreeNode* root,int val){
-        if(root->val<val){
-            if(root->right!=nullptr){
-            insert(root->right,val);
-            }
-            else{
-                TreeNode* n=new TreeNode(val);
-                root->right=n;
-            }
-        }
-        else{
-            if(root->left!=nullptr){
-                insert(root->left,val);
-            }
-            else{
-                TreeNode* n=new TreeNode(val);
-                root->left=n;
-            }
-        }
+        TreeNode* n = new TreeNode(preorder[i++]);
+        n->left=bstFromPreorder(preorder,n->val);
+        n->right=bstFromPreorder(preorder,bound);
+        return n;
     }
 };
