@@ -11,14 +11,28 @@
  */
 class Solution {
 public:
-    unordered_set<int>s;
-
     bool findTarget(TreeNode* root, int k) {
-        if(!root){
-            return false;
-        }    
-        if(s.count(k-root->val)) return true;
-        s.insert(root->val);
-        return findTarget(root->left,k) || findTarget(root->right,k);
+        if (!root) return false;
+
+        unordered_set<int> s;
+        vector<TreeNode*> v;
+        v.push_back(root);
+        while (v.size() != 0) {
+            TreeNode *n = v.back();
+            v.pop_back();
+
+            if (n->left)
+                v.push_back(n->left);
+
+            if (n->right)
+                v.push_back(n->right);
+            
+            if (s.find(n->val) != s.end())
+                return true;
+
+            int x = k - n->val;
+            s.insert(x);
+        }
+        return false;
     }
 };
